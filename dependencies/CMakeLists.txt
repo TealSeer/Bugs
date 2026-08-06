@@ -12,6 +12,7 @@ FetchContent_Declare(imgui
     GIT_REPOSITORY https://github.com/ocornut/imgui.git
     GIT_TAG v1.91.1
     GIT_SHALLOW ON)
+message(STATUS "Fetching ImGui...")
 FetchContent_MakeAvailable(imgui)
 
 FetchContent_Declare(imgui-sfml
