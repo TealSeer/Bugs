@@ -33,6 +33,10 @@ int main()
 				if (keyPressed->scancode == sf::Keyboard::Scancode::Q) {
 					return terminate(window);
 				}
+				else if (keyPressed->scancode == sf::Keyboard::Scancode::Space) {
+					game->killall();
+					game->addBug(BUFFER_WIDTH / 2, BUFFER_HEIGHT / 2, sf::Color::White);
+				}
 			}
 		}
 
@@ -43,7 +47,7 @@ int main()
 			for (auto& bug : bugColumn) {
 				if (!bug.has_value()) continue;
 				sf::Vertex newPixel;
-				newPixel.position = sf::Vector2f(bug->getX(), bug->getY() + 1);
+				newPixel.position = sf::Vector2f(bug->getX(), bug->getY() + 1); // top left of view is x,y = 0,1
 				newPixel.color = bug->getColor();
 				pixels.append(newPixel);
 			}

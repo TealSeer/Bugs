@@ -91,7 +91,7 @@ void Game::killall() {
 }
 
 bool Game::checkCoords(unsigned int x, unsigned int y) {
-	if ((x >= BUFFER_WIDTH || x < 0) || (y >= BUFFER_HEIGHT || y < 11)) {
+	if ((x >= BUFFER_WIDTH || x < 0) || (y >= BUFFER_HEIGHT || y < 0)) {
 		return false;
 	}
 
