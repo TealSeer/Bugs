@@ -5,17 +5,10 @@
 #include <imgui-SFML.h>
 
 Game* game;
-bool show_debug_window = false;
-
-int terminate(sf::RenderWindow& window) {
-	window.close();
-	ImGui::SFML::Shutdown();
-	delete game;
-	return 0;
-}
 
 int main()
 {
+	bool show_debug_window = false;
 	sf::RenderWindow window( sf::VideoMode( { WINDOW_WIDTH, WINDOW_HEIGHT } ), "Bugs", sf::Style::Close );
 	window.setFramerateLimit(60);
 	if (!ImGui::SFML::Init(window)) {
@@ -29,25 +22,23 @@ int main()
 	srand(time(0));
 	game->addBug(BUFFER_WIDTH / 2, BUFFER_HEIGHT / 2, sf::Color::White);
 
+	const auto onKeyPressed = [&window, &show_debug_window](const sf::Event::KeyPressed& keyPressed) {
+		if (keyPressed.scancode == sf::Keyboard::Scancode::Q) {
+			window.close();
+		}
+		else if (keyPressed.scancode == sf::Keyboard::Scancode::Space) {
+			show_debug_window = !show_debug_window;
+		}
+	};
+
+	const auto onClose = [&window](const sf::Event::Closed&) {
+		window.close();
+	};
+
 	sf::Clock deltaClock;
 	while ( window.isOpen() )
 	{
-		while ( const std::optional event = window.pollEvent() )
-		{
-			ImGui::SFML::ProcessEvent(window, *event);
-			if (event->is<sf::Event::Closed>()) {
-				return terminate(window);
-			}
-			else if (const auto keyPressed = event->getIf<sf::Event::KeyPressed>()) {
-				if (keyPressed->scancode == sf::Keyboard::Scancode::Q) {
-					return terminate(window);
-				}
-				else if (keyPressed->scancode == sf::Keyboard::Scancode::Space) {
-					show_debug_window = !show_debug_window;
-				}
-			}
-		}
-
+		window.handleEvents(onKeyPressed, onClose);
 		game->tick();
 
 		pixels.clear();
@@ -81,4 +72,7 @@ int main()
 		ImGui::SFML::Render(window);
 		window.display();
 	}
+	ImGui::SFML::Shutdown();
+	delete game;
+	return 0;
 }
