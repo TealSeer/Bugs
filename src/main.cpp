@@ -6,6 +6,30 @@
 
 Game* game;
 
+struct EventVisitor {
+	sf::RenderWindow& window;
+	bool& show_debug;
+
+	explicit EventVisitor(sf::RenderWindow& window, bool& show_debug) : window(window), show_debug(show_debug) {}
+	void operator()(const sf::Event::Closed& closed) {
+		ImGui::SFML::ProcessEvent(window, closed);
+		window.close();
+	}
+	void operator()(const sf::Event::KeyPressed& keyPressed) {
+		ImGui::SFML::ProcessEvent(window, keyPressed);
+		if (keyPressed.scancode == sf::Keyboard::Scancode::Q) {
+			window.close();
+		}
+		else if (keyPressed.scancode == sf::Keyboard::Scancode::Space) {
+			show_debug = !show_debug;
+		}
+	}
+	template <typename T>
+	void operator()(const T& event) {
+		ImGui::SFML::ProcessEvent(window, event);
+	}
+};
+
 int main()
 {
 	bool show_debug_window = false;
@@ -22,23 +46,12 @@ int main()
 	srand(time(0));
 	game->addBug(BUFFER_WIDTH / 2, BUFFER_HEIGHT / 2, sf::Color::White);
 
-	const auto onKeyPressed = [&window, &show_debug_window](const sf::Event::KeyPressed& keyPressed) {
-		if (keyPressed.scancode == sf::Keyboard::Scancode::Q) {
-			window.close();
-		}
-		else if (keyPressed.scancode == sf::Keyboard::Scancode::Space) {
-			show_debug_window = !show_debug_window;
-		}
-	};
-
-	const auto onClose = [&window](const sf::Event::Closed&) {
-		window.close();
-	};
-
 	sf::Clock deltaClock;
 	while ( window.isOpen() )
 	{
-		window.handleEvents(onKeyPressed, onClose);
+		while (const std::optional event = window.pollEvent()) {
+			event->visit(EventVisitor(window, show_debug_window));
+		}
 		game->tick();
 
 		pixels.clear();
