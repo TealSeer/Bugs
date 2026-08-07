@@ -38,6 +38,10 @@ int main()
 	if (!ImGui::SFML::Init(window)) {
 		return -1;
 	}
+	// Disable ImGui config file being created
+	ImGuiIO& io = ImGui::GetIO();
+	io.IniFilename = NULL;
+
 	sf::View scaledView(sf::Vector2f(BUFFER_WIDTH / 2, BUFFER_HEIGHT / 2), sf::Vector2f(BUFFER_WIDTH, BUFFER_HEIGHT));
 	window.setView(scaledView);
 	sf::RenderTexture buffer({ BUFFER_WIDTH, BUFFER_HEIGHT });
