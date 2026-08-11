@@ -27,8 +27,7 @@ void Game::draw(sf::RenderTarget& target, sf::RenderStates states) const {
 
 bool Game::addBug(unsigned int x, unsigned int y, sf::Color color) {
 	if(!checkCoords(x, y)) return false;
-	Bug newBug(x, y, color);
-	m_bugList[x][y] = newBug;
+	m_bugList[x][y] = Bug(x, y, color);
 	m_bugsAlive++;
 	return true;
 }
@@ -36,9 +35,7 @@ bool Game::addBug(unsigned int x, unsigned int y, sf::Color color) {
 void Game::tick() {
 	for(auto& bugColumn : m_bugList) {
 		for(auto& bug : bugColumn) {
-			if(!bug.has_value()) {
-				continue;
-			}
+			if(!bug.has_value()) continue;
 			int status = bug->tick();
 
 			if(status & TICK_DIE) {
@@ -109,10 +106,7 @@ void Game::killAll() {
 }
 
 bool Game::checkCoords(unsigned int x, unsigned int y) {
-	if((x >= BUFFER_WIDTH || x < 0) || (y >= BUFFER_HEIGHT || y < 0)) {
-		return false;
-	}
-
+	if((x >= BUFFER_WIDTH || x < 0) || (y >= BUFFER_HEIGHT || y < 0)) return false;
 	auto& potentialBug = m_bugList[x][y];
 	return !(potentialBug.has_value());
 }

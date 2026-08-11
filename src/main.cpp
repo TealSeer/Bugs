@@ -34,9 +34,7 @@ int main() {
 	bool show_debug_window = false;
 	sf::RenderWindow window(sf::VideoMode({ WINDOW_WIDTH, WINDOW_HEIGHT }), "Bugs", sf::Style::Close);
 	window.setFramerateLimit(60);
-	if(!ImGui::SFML::Init(window)) {
-		return -1;
-	}
+	if(!ImGui::SFML::Init(window)) return -1;
 	// Disable ImGui config file being created
 	ImGuiIO& io = ImGui::GetIO();
 	io.IniFilename = NULL;
