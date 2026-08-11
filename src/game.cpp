@@ -12,8 +12,7 @@ void Game::start() {
 }
 
 void Game::draw(sf::RenderTarget& target, sf::RenderStates states) const {
-	static sf::VertexArray pixels(sf::PrimitiveType::Points, BUFFER_HEIGHT * BUFFER_WIDTH);
-	pixels.clear();
+	sf::VertexArray pixels(sf::PrimitiveType::Points, m_bugsAlive);
 	for(auto& bugColumn : m_bugList) {
 		for(auto& bug : bugColumn) {
 			if(!bug.has_value()) continue;
