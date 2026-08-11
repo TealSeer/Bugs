@@ -17,10 +17,10 @@ struct EventVisitor {
 	}
 	void operator()(const sf::Event::KeyPressed& keyPressed) {
 		ImGui::SFML::ProcessEvent(window, keyPressed);
-		if (keyPressed.scancode == sf::Keyboard::Scancode::Q) {
+		if(keyPressed.scancode == sf::Keyboard::Scancode::Q) {
 			window.close();
 		}
-		else if (keyPressed.scancode == sf::Keyboard::Scancode::Space) {
+		else if(keyPressed.scancode == sf::Keyboard::Scancode::Space) {
 			show_debug = !show_debug;
 		}
 	}
@@ -30,12 +30,11 @@ struct EventVisitor {
 	}
 };
 
-int main()
-{
+int main() {
 	bool show_debug_window = false;
-	sf::RenderWindow window( sf::VideoMode( { WINDOW_WIDTH, WINDOW_HEIGHT } ), "Bugs", sf::Style::Close );
+	sf::RenderWindow window(sf::VideoMode({ WINDOW_WIDTH, WINDOW_HEIGHT }), "Bugs", sf::Style::Close);
 	window.setFramerateLimit(60);
-	if (!ImGui::SFML::Init(window)) {
+	if(!ImGui::SFML::Init(window)) {
 		return -1;
 	}
 	// Disable ImGui config file being created
@@ -45,43 +44,30 @@ int main()
 	sf::View scaledView(sf::Vector2f(BUFFER_WIDTH / 2, BUFFER_HEIGHT / 2), sf::Vector2f(BUFFER_WIDTH, BUFFER_HEIGHT));
 	window.setView(scaledView);
 	sf::RenderTexture buffer({ BUFFER_WIDTH, BUFFER_HEIGHT });
-	sf::VertexArray pixels(sf::PrimitiveType::Points, BUFFER_WIDTH * BUFFER_HEIGHT);
 	game = new Game;
 	srand(time(0));
-	game->addBug(BUFFER_WIDTH / 2, BUFFER_HEIGHT / 2, sf::Color::White);
+	game->start();
 
 	sf::Clock deltaClock;
-	while ( window.isOpen() )
-	{
-		while (const std::optional event = window.pollEvent()) {
+	while(window.isOpen()) {
+		while(const std::optional event = window.pollEvent()) {
 			event->visit(EventVisitor(window, show_debug_window));
 		}
 		game->tick();
 
-		pixels.clear();
-		for (auto& bugColumn : game->buglist) {
-			for (auto& bug : bugColumn) {
-				if (!bug.has_value()) continue;
-				sf::Vertex newPixel;
-				newPixel.position = sf::Vector2f(bug->getX(), bug->getY() + 1); // top left of view is x,y = 0,1
-				newPixel.color = bug->getColor();
-				pixels.append(newPixel);
-			}
-		}
-
 		ImGui::SFML::Update(window, deltaClock.restart());
-		if (show_debug_window) {
+		if(show_debug_window) {
 			ImGui::Begin("Debug", &show_debug_window, ImGuiWindowFlags_AlwaysAutoResize);
-			ImGui::Text("Total bugs: %d", game->bugsAlive);
-			if (ImGui::Button("Reset")) {
-				game->killall();
-				game->addBug(BUFFER_WIDTH / 2, BUFFER_HEIGHT / 2, sf::Color::White);
+			ImGui::Text("Total bugs: %d", game->getBugsAlive());
+			if(ImGui::Button("Reset")) {
+				game->killAll();
+				game->start();
 			}
 			ImGui::End();
 		}
 
 		buffer.clear(sf::Color(16, 16, 16));
-		buffer.draw(pixels);
+		buffer.draw(*game);
 		buffer.display();
 		window.clear(sf::Color(16, 16, 16));
 		sf::Sprite bufferSprite(buffer.getTexture());
