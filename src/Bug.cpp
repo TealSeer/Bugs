@@ -1,4 +1,5 @@
 #include "Bug.h"
+#include "Application.h"
 
 Bug::Bug(unsigned int x, unsigned int y) : Bug::Bug(x, y, sf::Color::White) {}
 
@@ -8,15 +9,15 @@ int Bug::tick() {
 	int status = 0;
 	if(m_health > 0) --m_health;
 	if(m_health <= 0) status |= TICK_DIE;
-	if((rand() % 60) == 0) status |= TICK_REPRODUCE;
+	if((Application::getRandomUInt() % 60) == 0) status |= TICK_REPRODUCE;
 	return status;
 }
 
 sf::Color Bug::getNewColor() const {
 	sf::Color newColor = m_color;
-	if((rand() % 5) == 0) {
-		int field = rand() % 3;
-		int modify = rand() % 2;
+	if((Application::getRandomUInt() % 5) == 0) {
+		unsigned int field = Application::getRandomUInt() % 3;
+		unsigned int modify = Application::getRandomUInt() % 2;
 		switch(field) {
 			case 0:
 				if(newColor.r == 255) {

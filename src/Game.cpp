@@ -1,4 +1,5 @@
 #include "Game.h"
+#include "Application.h"
 #include <vector>
 #include <algorithm>
 #include <random>
@@ -53,42 +54,20 @@ void Game::tick() {
 }
 
 std::optional<std::pair<unsigned int, unsigned int>> Game::findAdjacent(unsigned int x, unsigned int y) {
-	std::array directions{ 0, 1, 2, 3, 4, 5, 6, 7 };
-	std::minstd_rand rd(static_cast<unsigned int>(time(0)));
-	std::ranges::shuffle(directions, rd);
+	std::array<std::pair<int, int>, 8> directions = { {
+		{-1, -1}, // NW
+		{0, -1}, // N
+		{1, -1}, // NE
+		{1, 0}, // E
+		{1, 1}, // SE
+		{0, 1}, // S
+		{-1, 1}, // SW
+		{-1, 0}, // W
+	} };
+	std::ranges::shuffle(directions, Application::getRandomDevice());
 	std::pair<unsigned int, unsigned int> newCoords;
 	for(auto dir : directions) {
-		newCoords = { x, y };
-		switch(dir) {
-			case 0:
-				newCoords.first--;
-				newCoords.second++;
-				break;
-			case 1:
-				newCoords.second++;
-				break;
-			case 2:
-				newCoords.first++;
-				newCoords.second++;
-				break;
-			case 3:
-				newCoords.first--;
-				break;
-			case 4:
-				newCoords.first++;
-				break;
-			case 5:
-				newCoords.first--;
-				newCoords.second--;
-				break;
-			case 6:
-				newCoords.second--;
-				break;
-			case 7:
-				newCoords.first++;
-				newCoords.second--;
-				break;
-		}
+		newCoords = { x + dir.first, y + dir.second };
 		if(checkCoords(newCoords.first, newCoords.second)) {
 			return { newCoords };
 		}

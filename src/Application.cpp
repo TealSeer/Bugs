@@ -3,8 +3,9 @@
 #include <imgui.h>
 #include <imgui-SFML.h>
 
+std::random_device Application::m_randomDevice{};
+
 bool Application::init() {
-	srand(time(0));
 	m_window.setFramerateLimit(60);
 	if(!ImGui::SFML::Init(m_window)) return false;
 	// Disable ImGui config file being created
