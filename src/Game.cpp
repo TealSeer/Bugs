@@ -54,9 +54,8 @@ void Game::tick() {
 
 std::optional<std::pair<unsigned int, unsigned int>> Game::findAdjacent(unsigned int x, unsigned int y) {
 	std::array directions{ 0, 1, 2, 3, 4, 5, 6, 7 };
-	std::random_device rd;
-	std::mt19937 gen{ rd() };
-	std::ranges::shuffle(directions, gen);
+	std::minstd_rand rd(static_cast<unsigned int>(time(0)));
+	std::ranges::shuffle(directions, rd);
 	std::pair<unsigned int, unsigned int> newCoords;
 	for(auto dir : directions) {
 		newCoords = { x, y };
