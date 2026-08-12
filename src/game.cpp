@@ -7,24 +7,28 @@ Game::Game() {
 	std::array<std::optional<Bug>, BUFFER_HEIGHT> column;
 	column.fill({});
 	m_bugList.fill(column);
+	m_pixelBuffer.resize(BUFFER_HEIGHT * BUFFER_WIDTH);
 }
 
 void Game::start() {
 	addBug(BUFFER_WIDTH / 2, BUFFER_HEIGHT / 2, sf::Color::White);
 }
 
-void Game::draw(sf::RenderTarget& target, sf::RenderStates states) const {
-	sf::VertexArray pixels(sf::PrimitiveType::Points, m_bugsAlive);
+void Game::updateBuffer() {
+	m_pixelBuffer.clear();
 	for(auto& bugColumn : m_bugList) {
 		for(auto& bug : bugColumn) {
 			if(!bug.has_value()) continue;
 			sf::Vertex newPixel;
 			newPixel.position = sf::Vector2f(bug->getX(), bug->getY() + 1); // top left of view is x,y = 0,1
 			newPixel.color = bug->getColor();
-			pixels.append(newPixel);
+			m_pixelBuffer.append(newPixel);
 		}
 	}
-	target.draw(pixels);
+}
+
+void Game::draw(sf::RenderTarget& target, sf::RenderStates states) const {
+	target.draw(m_pixelBuffer);
 }
 
 bool Game::addBug(unsigned int x, unsigned int y, sf::Color color) {
@@ -53,6 +57,7 @@ void Game::tick() {
 			}
 		}
 	}
+	updateBuffer();
 }
 
 std::optional<std::pair<unsigned int, unsigned int>> Game::findAdjacent(unsigned int x, unsigned int y) {
@@ -108,6 +113,7 @@ void Game::killAll() {
 		bugColumn.fill({});
 	}
 	m_bugsAlive = 0;
+	updateBuffer();
 }
 
 bool Game::checkCoords(unsigned int x, unsigned int y) {
