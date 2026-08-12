@@ -2,7 +2,7 @@
 #include <stdint.h>
 #include <cstdlib>
 #include <SFML/Graphics.hpp>
-#include "defines.h"
+#include "Defines.h"
 
 class Bug {
 private:

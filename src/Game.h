@@ -1,21 +1,21 @@
 #pragma once
-#include "bug.h"
+#include "Bug.h"
 #include <array>
 #include <optional>
-#include "defines.h"
+#include "Defines.h"
 
 class Game : public sf::Drawable {
 private:
 	std::optional<std::pair<unsigned int, unsigned int>> findAdjacent(unsigned int x, unsigned int y);
 	bool checkCoords(unsigned int x, unsigned int y);
-	void draw(sf::RenderTarget& target, sf::RenderStates states) const override;
+	void draw(sf::RenderTarget& target, sf::RenderStates states) const override { target.draw(m_pixelBuffer); }
 	void updateBuffer();
 	uint32_t m_bugsAlive = 0;
 	std::array<std::array<std::optional<Bug>, BUFFER_HEIGHT>, BUFFER_WIDTH> m_bugList;
 	sf::VertexArray m_pixelBuffer;
 public:
 	Game();
-	void start();
+	void start() { addBug(BUFFER_WIDTH / 2, BUFFER_HEIGHT / 2, sf::Color::White); }
 	void tick();
 	void killAll();
 	bool addBug(unsigned int x, unsigned int y, sf::Color color);

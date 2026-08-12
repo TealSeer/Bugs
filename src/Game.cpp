@@ -1,4 +1,4 @@
-#include "game.h"
+#include "Game.h"
 #include <vector>
 #include <algorithm>
 #include <random>
@@ -8,10 +8,6 @@ Game::Game() {
 	column.fill({});
 	m_bugList.fill(column);
 	m_pixelBuffer.resize(BUFFER_HEIGHT * BUFFER_WIDTH);
-}
-
-void Game::start() {
-	addBug(BUFFER_WIDTH / 2, BUFFER_HEIGHT / 2, sf::Color::White);
 }
 
 void Game::updateBuffer() {
@@ -25,10 +21,6 @@ void Game::updateBuffer() {
 			m_pixelBuffer.append(newPixel);
 		}
 	}
-}
-
-void Game::draw(sf::RenderTarget& target, sf::RenderStates states) const {
-	target.draw(m_pixelBuffer);
 }
 
 bool Game::addBug(unsigned int x, unsigned int y, sf::Color color) {

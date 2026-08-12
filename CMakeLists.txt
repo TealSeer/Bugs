@@ -6,7 +6,7 @@ set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
 include(FetchContent)
 add_subdirectory(dependencies)
 
-add_executable(Bugs "src/main.cpp" "src/defines.h" "src/game.cpp" "src/game.h" "src/bug.h" "src/bug.cpp")
+add_executable(Bugs "src/Main.cpp" "src/Defines.h" "src/Game.cpp" "src/Game.h" "src/Bug.h" "src/Bug.cpp")
 if(WIN32)
 	target_link_options(Bugs PRIVATE "$<IF:$<CONFIG:Debug>,/SUBSYSTEM:CONSOLE,/SUBSYSTEM:WINDOWS;/ENTRY:mainCRTStartup>")
 	if(BUILD_SHARED_LIBS)

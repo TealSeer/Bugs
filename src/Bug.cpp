@@ -1,4 +1,4 @@
-#include "bug.h"
+#include "Bug.h"
 
 Bug::Bug(unsigned int x, unsigned int y) : Bug::Bug(x, y, sf::Color::White) {}
 

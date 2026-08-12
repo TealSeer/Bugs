@@ -1,6 +1,6 @@
 #include <SFML/Graphics.hpp>
-#include "defines.h"
-#include "game.h"
+#include "Defines.h"
+#include "Game.h"
 #include <imgui.h>
 #include <imgui-SFML.h>
 
