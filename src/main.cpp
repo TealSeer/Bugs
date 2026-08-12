@@ -57,6 +57,8 @@ int main() {
 		if(show_debug_window) {
 			ImGui::Begin("Debug", &show_debug_window, ImGuiWindowFlags_AlwaysAutoResize);
 			ImGui::Text("Total bugs: %d", game->getBugsAlive());
+			ImGui::Separator();
+			ImGui::Checkbox("Exhaustive search", &game->m_exhaustiveSearch);
 			if(ImGui::Button("Reset")) {
 				game->killAll();
 				game->start();

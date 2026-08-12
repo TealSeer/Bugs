@@ -1,5 +1,6 @@
 #include "game.h"
 #include <vector>
+#include <random>
 
 Game::Game() {
 	std::array<std::optional<Bug>, BUFFER_HEIGHT> column;
@@ -54,48 +55,51 @@ void Game::tick() {
 }
 
 std::optional<std::pair<unsigned int, unsigned int>> Game::findAdjacent(unsigned int x, unsigned int y) {
-	int direction = rand() % 8;
-	unsigned int newX = 0, newY = 0;
-	switch(direction) {
-		case 0:
-			newX = x - 1;
-			newY = y + 1;
-			break;
-		case 1:
-			newX = x;
-			newY = y + 1;
-			break;
-		case 2:
-			newX = x + 1;
-			newY = y + 1;
-			break;
-		case 3:
-			newX = x - 1;
-			newY = y;
-			break;
-		case 4:
-			newX = x + 1;
-			newY = y;
-			break;
-		case 5:
-			newX = x - 1;
-			newY = y - 1;
-			break;
-		case 6:
-			newX = x;
-			newY = y - 1;
-			break;
-		case 7:
-			newX = x + 1;
-			newY = y - 1;
-			break;
+	std::array directions{ 0, 1, 2, 3, 4, 5, 6, 7 };
+	std::random_device rd;
+	std::mt19937 gen{ rd() };
+	std::ranges::shuffle(directions, gen);
+	std::pair<unsigned int, unsigned int> newCoords;
+	for(auto dir : directions) {
+		newCoords = { x, y };
+		switch(dir) {
+			case 0:
+				newCoords.first--;
+				newCoords.second++;
+				break;
+			case 1:
+				newCoords.second++;
+				break;
+			case 2:
+				newCoords.first++;
+				newCoords.second++;
+				break;
+			case 3:
+				newCoords.first--;
+				break;
+			case 4:
+				newCoords.first++;
+				break;
+			case 5:
+				newCoords.first--;
+				newCoords.second--;
+				break;
+			case 6:
+				newCoords.second--;
+				break;
+			case 7:
+				newCoords.first++;
+				newCoords.second--;
+				break;
+		}
+		if(checkCoords(newCoords.first, newCoords.second)) {
+			return { newCoords };
+		}
+		else {
+			if(!m_exhaustiveSearch) return {};
+		}
 	}
-	if(checkCoords(newX, newY)) {
-		return { { newX, newY } };
-	}
-	else {
-		return {};
-	}
+	return {};
 }
 
 void Game::killAll() {

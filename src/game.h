@@ -18,4 +18,5 @@ public:
 	void killAll();
 	bool addBug(unsigned int x, unsigned int y, sf::Color color);
 	uint32_t getBugsAlive() const { return m_bugsAlive; }
+	bool m_exhaustiveSearch = false; // public because ImGui does not support getter/setters to control GUI elements
 };
