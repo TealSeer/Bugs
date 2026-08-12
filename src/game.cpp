@@ -1,5 +1,6 @@
 #include "game.h"
 #include <vector>
+#include <algorithm>
 #include <random>
 
 Game::Game() {
